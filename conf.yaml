@@ -1,0 +1,65 @@
+%YAML 1.1
+---
+#If you have not understand place, please download the 'sz -be /etc/newiup/newiup-reference.doc' learning
+
+servers:
+  - CDRsrv1:
+    addr: 192.168.30.228:21
+    username: admin
+    passwd: 123123
+    protocol: ftp                   #[ftp/sftp]
+    ftp-mode: passive               #[initiative/passive]
+    dir: /
+    finish-flag: 
+    file-suffix: 
+    thread-num: 1                   #[1-15]
+    compress: no                    #[yes/no]
+    archive:                        #[date/path]  Archive log receiving server
+ 
+  - CDRsrv2:
+    addr: 192.168.30.228:22
+    username: admin
+    passwd: 123123
+    protocol: sftp                  #[ftp/sftp]
+    ftp-mode: passive               #[initiative/passive]
+    dir: //home/admin               #If you're using SFTP, path configuration must be an absolute path
+    finish-flag: abc
+    file-suffix: info
+    thread-num: 1                   #[1-15]
+    compress: no                    #[yes/no]
+    archive: path                   #[date/path]
+
+  - CDRsrv3:
+    addr: 192.168.200.242:22
+    username: root
+    passwd: lzc123
+    protocol: sftp                  #[ftp/sftp]
+    ftp-mode: passive               #[initiative/passive]
+    dir: /home/admin
+    finish-flag: ok
+    file-suffix: info
+    thread-num: 1
+    compress: no                    #[yes/no]
+    archive: date                   #[date/path]
+
+monitor-group:
+  - CDRmonitor-1:
+    enable: yes                     #[yes/no]
+    monitor-dir: /home/perseus/cdr
+    monitor-file-type: ctr
+    upload-find-act: replace        #[keep/replace/add/cut]
+    upload-file-type: txt
+    servers-primer: CDRsrv3|CDRsrv1
+    servers-backup: 
+    compress-type: gz               #[gz/bz/Z/zip/7z/lzma/tar/tgz/tar.gz/tar.bz/tar.bz2/tar.Z/]
+    compress-pcount: 1              #[1-15]	
+    finish-act: delete              #[same-move/keep/delete/same-move-time/diff-move/diff-move-time] 
+    move-to: 
+
+global-config:
+    affinity: 0                     #[0-N/no]
+    max-upload: 10000
+    log-dir-path: /home/newiuplog
+    compress-buff-size: 100         #unit [M]
+    upload-timeout: 300             #unit [s]
+    connect-timeout: 30             #unit [s]
